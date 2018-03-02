@@ -1,8 +1,8 @@
 {% set name = "CherryPy" %}
-{% set version = "14.0.0" %}
+{% set version = "8.9.1" %}
 {% set bundle = "tar.gz" %}
 {% set hash_type = "sha256" %}
-{% set hash = "5f5ee020d6547a8d452b3560775ca2374ffe2ff8c0aec1b272e93b6af80d850e" %}
+{% set hash = "dfad2f34e929836d016ae79f9e27aff250a8a71df200bf87c3e9b23541e091c5" %}
 {% set build = 0 %}
 
 package:
@@ -10,29 +10,23 @@ package:
   version: {{ version }}
 
 source:
+  fn: {{ name }}-{{ version }}.{{ bundle }}
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ bundle }}
   {{ hash_type }}: {{ hash }}
 
 build:
-  entry_points:
-    - cherryd = cherrypy.__main__:run
-  noarch: python
   number: {{ build }}
-  script: python -m pip install --no-deps --ignore-installed .
+  script: python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
   build:
     - python
-    - pip
+    - setuptools
     - setuptools_scm
 
   run:
     - python
-    - setuptools
-    - six >=1.11.0
-    - cheroot >=5.8.3
-    - portend >=2.1.1
-    - jaraco.classes
+    - six
 
 test:
   imports:
@@ -42,6 +36,7 @@ test:
     - cherrypy.scaffold
     - cherrypy.test
     - cherrypy.tutorial
+    - cherrypy.wsgiserver
 
   commands:
     - cherryd -h
@@ -58,3 +53,4 @@ about:
 extra:
   recipe-maintainers:
     - pmlandwehr
+    - jmeppley
